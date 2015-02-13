@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Algorithm Visualization</title>
+    <link rel="stylesheet" href="vamonos.css" />
+    <script type="text/javascript" src="vamonos-all.js"></script>
+
+
+  </head>
+  <body>
+  <div id="controls"></div>
+  <div id="callstack"></div>
+  <div id="pseudocode-main" class="viz-container" title="RockPaperScissors(rounds):">
+        rounds = rounds || 3;
+        outcomes = [];
+        plays = ['R', 'P', 'S']
+        combos(rounds, playedSoFar);
+        return outcomes;
+    </div>
+    <div id="pseudocode-combos" class="viz-container" title="Combos(roundsToGo, playedSoFar):">
+        if( roundsToGo === 0 )
+            outcomes.push(playedSoFar);
+            return;
+        for(var i = 0; i < plays.length; i++ )
+            currentPlay = plays[i];
+            combos(roundsToGo-1,playedSoFar.concat(currentPlay));
+    </div>
+
+  Plays
+  <div id="demo1array" class="viz-container"></div>
+  Played So Far
+  <div id="demo2array" class="viz-container"></div>
+  Outcomes
+  <div id="demo3array" class="viz-container"></div>
+  </body>
+  <script type="text/javascript">
+   
+  var myviz3 = new Vamonos.Visualizer({
+        widgets: [
+            new Vamonos.Widget.Hardcoded({ rounds: 3, watch: "outcomes" }),
+            new Vamonos.Widget.Controls({ container: "controls" }),
+            new Vamonos.Widget.CallStack({
+                container: "callstack",
+                procedureNames: { main: "rockPaperScissors" }
+            }),
+            new Vamonos.Widget.Array({
+                varName: "outcomes",
+                container: "demo3array",
+                defaultInput: []
+            }),
+            new Vamonos.Widget.Array({
+                varName: "plays",
+                container: "demo1array",
+                defaultInput: ['R', 'P', 'S'],
+                showIndices: ["combos::i"]
+            }),
+            new Vamonos.Widget.Array({
+                varName: "playedSoFar",
+                container: "demo2array",
+                defaultInput: [],
+
+            }),
+            new Vamonos.Widget.Pseudocode({
+            container: "pseudocode-combos",
+            breakpoints: "all",
+            procedureName: "combos"
+            }),
+            new Vamonos.Widget.Pseudocode({
+            container: "pseudocode-main",
+            breakpoints: "all",
+            procedureName: "main"
+            })
+
+        ],
+
+        autoStart: true,
+
+        algorithm: {
+            main: function (_) {
+                with (this) {
+                    _(1); rounds = rounds || 3;
+                    _(2); global.outcomes = [];
+                    _(3); global.plays = plays;
+                    _(4); combos({roundsToGo: rounds, playedSoFar: []});
+                    _(5); return global.outcomes;
+                }
+            },
+            combos:  function (_) {
+                with (this) {
+                    _(1); if( roundsToGo === 0 ){
+                    _(2);   global.outcomes.push(playedSoFar);
+                    _(3);   return;
+                            }
+                    _(4); for(var i = 0; i < global.plays.length; _(4), i++ ){
+                    _(5);   currentPlay = global.plays[i];
+                    _(6);   combos( {roundsToGo: roundsToGo-1, playedSoFar: playedSoFar.concat(currentPlay)});
+                            }
+
+                }
+            }
+        }
+    });
+
+
+  </script>
+</html>
